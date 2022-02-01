@@ -2,7 +2,7 @@ from db_connection import DatabaseConnection
 
 connection = DatabaseConnection()
 conn = connection.dbconnection()
-db = conn.cursor(buffered=True)
+db = conn.cursor(buffered=True, dictionary=True)
 
 
 def retrieve_cart_item(user_id):
@@ -12,7 +12,7 @@ def retrieve_cart_item(user_id):
     """
     get_cart_query = f"SELECT * FROM cart where user_id = %d" % user_id
     db.execute(get_cart_query)
-    wish_list = [i for i in cursor]
+    wish_list = [i for i in db]
     if wish_list:
         return wish_list
     else:

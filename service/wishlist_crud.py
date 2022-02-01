@@ -10,9 +10,8 @@ def retrieve_wishlist(user_id):
         desc: query to get all wishlist detail from database
         return: wishlist detail in dictionary format
     """
-    get_wishlist_query = f"SELECT wishlist.id, user_id, book_id, books.title, books.author_name, books.price, " \
-                         f"books.quantity FROM wishlist INNER JOIN books on books.id = wishlist.book_id where user_id" \
-                         f" = %d" % user_id
+    get_wishlist_query = '''SELECT books.author_name, books.title, books.price, books.image from books
+                            join wishlist on wishlist.book_id = books.book_id where user_id = %d''' % user_id
     db.execute(get_wishlist_query)
     wish_list = [i for i in db]
     if wish_list:

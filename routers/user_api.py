@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, Header
+from fastapi import FastAPI, APIRouter, Header, HTTPException
 from logger import logging
 from service import email
 
@@ -120,7 +120,9 @@ def user_login(email_id: str, password: str):
         user_details = queries.login_into_book_store(email_id, password)
         logging.info("Successfully Login into Book Store App!!")
         logging.debug(f"User Details are : {user_details}")
-        user_token = handler.encode_login_token(user_details[0][1])
+        print(user_details[0])
+        user_token = handler.encode_login_token(user_details[0])
+
         return {"status": 200, "message": "Successfully Generated the token", "token": user_token, "data": user_details}
     except Exception as e:
         logging.error(f"Error: {e}")
@@ -147,7 +149,7 @@ def verify_token(token: str = Header(None)):
     if token is None:
         raise HTTPException(status_code=401, detail="Token is not given in Header")
     try:
-        user_id = decode_login_token(token)
+        user_id = handler.decode_login_token(token)
         return user_id
     except Exception as exc:
         raise HTTPException(status_code=403, detail="You are not a authorized person")

@@ -78,7 +78,7 @@ def login_into_book_store(email_id, password):
         param: user id
         return: employee detail in dictionary format
     """
-    show_data_query = f"SELECT * FROM users WHERE email_id = '{email_id}' and password = '{password}'"
+    show_data_query = f"SELECT user_id FROM users WHERE email_id = '{email_id}' and password = '{password}'"
     db.execute(show_data_query)
     user = [i for i in db]
     if user:
