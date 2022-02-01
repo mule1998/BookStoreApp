@@ -11,15 +11,15 @@ logging.basicConfig(filename='user.log', filemode='a', level=logging.DEBUG,
 
 
 @route.get("/wishlist/")
-def get_all_wishlist(token=Depends(verify_token)):
+def get_all_wishlist(user_token=Depends(verify_token)):
     """
         desc: created api to get a wishlist for user.
         param: user_id: it is a user id.
         return: book details from wishlist in SMD format.
     """
     try:
-        user_id = token
-        wish_list = retrieve_wishlist(user_id)
+        user_id = user_token
+        wish_list = retrieve_wishlist(user_id[0])
         logging.info("Successfully Get All Books From Wishlist")
         logging.debug(f"User Details are : {wish_list}")
         return {"status": 200, "message": "Successfully Get A Wishlist", "data": wish_list}
@@ -37,7 +37,8 @@ def add_books_to_wishlist(wishlist: Wishlist, token=Depends(verify_token)):
     """
     try:
         user_id = token
-        wish_list = add_to_wishlist(user_id, wishlist)
+        print(user_id[0])
+        wish_list = add_to_wishlist(user_id[0], wishlist)
         logging.info("Book Successfully Added To wishlist")
         return {"status": 200, "message": f"Book Successfully Added To wishlist!!", "data": wish_list}
     except Exception as e:
@@ -54,7 +55,7 @@ def delete_books_from_wishlist(wishlist: Wishlist, token=Depends(verify_token)):
     """
     try:
         user_id = token
-        wish_list = remove_book(user_id, wishlist)
+        wish_list = remove_book(user_id[0], wishlist)
         logging.info("Book Successfully Removed From wishlist")
         return {"status": 200, "message": f"Book Successfully Removed From wishlist!!", "data": wish_list}
     except Exception as e:
