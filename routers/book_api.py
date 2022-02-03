@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, File, UploadFile
 from logger import logging
 from schemas.book_pydantic import Books
 from service import queries
@@ -95,3 +95,26 @@ def update_book_details(book_id: int, books: Books):
     except Exception as e:
         logging.error(f"Error: {e}")
         return {"status": 500, "message": f"Error : {e}"}
+
+
+# @route.post("/uploadFile/")
+# async def create_upload_file(file: UploadFile = File(...)):
+#     try:
+#         detail = await book_crud.insert_data_in_book(file)
+#         logging.info("Successfully Updated The Book Details")
+#         logging.debug(detail)
+#         return {"status": 200, "message": "Successfully Added The Book File"}
+#     except Exception as e:
+#         logging.error(f"Error: {e}")
+#         return {"status": 500, "message": f"Error : {e}"}
+
+
+@route.post("/upload_file")
+async def upload_csv_file(csv_file: UploadFile = File(...)):
+    try:
+        book_crud.insert_to_database(csv_file)
+        logging.info("successfully uploaded the file and inserted into database")
+        return {"status": 200, "message": "Books Added to Database Successfully"}
+    except Exception as error:
+        logging.error(f"error caught :{error}")
+        return {"status": 500, "message": f"Error : {error}"}

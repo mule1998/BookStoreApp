@@ -2,7 +2,7 @@ from db_connection import DatabaseConnection
 
 connection = DatabaseConnection()
 conn = connection.dbconnection()
-db = conn.cursor(buffered=True)
+db = conn.cursor(buffered=True, dictionary=True)
 
 
 def retrieve_wishlist(user_id):
