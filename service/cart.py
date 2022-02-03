@@ -10,7 +10,9 @@ def retrieve_cart_item(user_id):
         desc: query to get all cart detail from database
         return: cart detail in dictionary format
     """
-    get_cart_query = f"SELECT * FROM cart where user_id = %d" % user_id
+
+    get_cart_query = '''SELECT books.book_id,books.author_name, books.title, books.price, books.image from books
+                                join cart on cart.book_id = books.book_id where user_id = %d''' % user_id
     db.execute(get_cart_query)
     wish_list = [i for i in db]
     if wish_list:

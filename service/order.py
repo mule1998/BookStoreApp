@@ -2,16 +2,27 @@ from db_connection import DatabaseConnection
 
 connection = DatabaseConnection()
 conn = connection.dbconnection()
-db = conn.cursor(buffered=True)
+db = conn.cursor(buffered=True, dictionary=True)
 
 
-def place_new_order(address, user_id):
+def book_order(user_id, address):
     """
-        desc: place order
-        param:  address, book_id
-        return: result_args
+        desc: query to call the procedure where many queries are performed
+        param: user_id, order model.
     """
     args = [user_id, f'{address}']
-    result_args = db.callproc('sp_order', args)
+    show_data_query = db.callproc('place_order', args)
     conn.commit()
-    return result_args
+    return show_data_query
+
+
+def get_data(user_id):
+    """
+           desc: query to call order details
+           param: user_id.
+       """
+    query = '''select id from order_details where user_id = %d ''' % user_id
+    db.execute(query)
+    conn.commit()
+    result = db.fetchall()
+    return result

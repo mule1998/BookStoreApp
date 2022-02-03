@@ -1,4 +1,6 @@
 from db_connection import DatabaseConnection
+import pandas as pd
+from io import StringIO
 
 connection = DatabaseConnection()
 conn = connection.dbconnection()
@@ -74,3 +76,30 @@ def update_book(book_id: int, books):
     conn.commit()
     book_data = retrieve_book(book_id)
     return book_data
+
+
+# async def insert_data_in_book(file):
+#     """
+#         desc: query to insert book details in database
+#         param: author_name, title, image, quantity, price, description.
+#         return: book detail in dictionary format
+#     """
+#     books_dataframe = pd.read_csv(StringIO(str(file.file.read(), 'utf-8')), encoding='utf-8')
+#     column_name = ", ".join([str(i) for i in books_dataframe.columns.tolist()])
+#     for i, rows in books_dataframe.iterrows():
+#         sql = "INSERT INTO books (" + column_name + ") VALUES (" + "%s," * (len(rows) - 1) + "%s)"
+#         db.execute(sql, tuple(rows))
+#         conn.commit()
+#     return "Books are Added Successfully!!"
+
+def insert_to_database(csv_file):
+        """
+        desc: to read csv and upload it to database
+        param: csv_file: path of csv file
+        """
+        books_dataframe = pd.read_csv(StringIO(str(csv_file.file.read(), 'utf-8')), encoding='utf-8')
+        cols = ", ".join([str(i) for i in books_dataframe.columns.tolist()])
+        for i, row in books_dataframe.iterrows():
+            sql = "INSERT INTO books (" + cols + ") VALUES (" + "%s," * (len(row) - 1) + "%s)"
+            db.execute(sql, tuple(row))
+            conn.commit()
